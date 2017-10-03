@@ -33,4 +33,16 @@ public class State {
 	double longitude;
 
 	Date timeDeliveryAttempt;
+
+	public String displayPostOffice() {
+		return postOffice + " " + postcode;
+	}
+
+	public String displayGps() {
+		return latitude + " " + longitude;
+	}
+
+	public String displayTitle() {
+		return text + " " + date.toString();
+	}
 }
