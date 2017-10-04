@@ -7,9 +7,9 @@ Simple springboot aplication which will automaticaly check parcel status and if 
 Just clone source and run in project folder: "./gradlew build" and jar file is in build/libs folder. Or "./gradlew buildDocker" for docker image. And just start docker image (do not forget redirect port 8080).
 
 ## Used technologies
-Java 8
-Springboot (Rest client, Rest service, MVC)
-Thymeleaf
+* Java 8
+* Springboot (Rest client, Rest service, MVC)
+* Thymeleaf
 
 ## Microservice architecture
 For this project in microservice architecture see https://github.com/Novros/CzechPost-notifier-microservices. But that repository is not updated and maybe never will be.
