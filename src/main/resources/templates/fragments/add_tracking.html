@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="add-tracking">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="form-inline" method="post" th:action="@{/add-tracking}" th:object="${formTrackingNumbers}">
+                <div class="form-group" style="width: 85%">
+                    <label for="numbers" style="width: 39%">Tracking numbers (';' use as delimiter)</label>
+                    <input type="text" class="form-control" th:field="*{trackingNumbers}" id="numbers" style="width: 60%"/>
+                </div>
+                <button type="submit" class="btn btn-info" style="width: 14%">Add</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -38,6 +38,7 @@ public class DefaultController {
 
 	@GetMapping(value = {"/", "/home"})
 	public String home(final Model model) {
+		model.addAttribute("formTrackingNumbers", new TrackingNumbersForm());
 		model.addAttribute("parcels", getParcelsOfCurrentUser());
 		return "home";
 	}

@@ -1,5 +1,7 @@
 package cz.novros.cp.common;
 
+import java.text.SimpleDateFormat;
+
 import lombok.experimental.UtilityClass;
 
 /**
@@ -9,4 +11,6 @@ import lombok.experimental.UtilityClass;
 public class CommonConstants {
 
 	public static final String TRACKING_NUMBER_DELIMITER = ";";
+	
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 }

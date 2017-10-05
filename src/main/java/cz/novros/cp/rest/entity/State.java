@@ -22,23 +22,23 @@ public class State {
 	String text;
 
 	@JsonProperty("postcode")
-	int postcode;
+	Integer postcode;
 
 	@JsonProperty("postOffice")
 	String postOffice;
 
 	@JsonProperty("idIcon")
-	int idIcon;
+	Integer idIcon;
 
 	@JsonProperty("latitude")
-	double latitude;
+	Double latitude;
 
 	@JsonProperty("longitude")
-	double longitude;
+	Double longitude;
 
 	@JsonProperty("timeDeliveryAttempt")
 	Date timeDeliveryAttempt;
 
 	@JsonProperty("publicAccess")
-	boolean publicAccess;
+	Boolean publicAccess;
 }

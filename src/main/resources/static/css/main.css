@@ -1,0 +1,30 @@
+.list-group-item {
+    padding: 5px 5px;
+    border: none;
+}
+
+.panel-body {
+    padding: 10px;
+}
+
+.state-panel {
+    margin-bottom: 5px;
+}
+
+.state-body {
+    padding: 4px;
+}
+
+.state-info {
+    margin: 0;
+}
+
+.caret.collapse.in {
+    display: inline-block;
+    border-top: none;
+    border-bottom: 4px solid;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+}

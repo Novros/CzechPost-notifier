@@ -1,7 +1,10 @@
 package cz.novros.cp.entity;
 
 import java.util.Date;
+import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +13,10 @@ import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+
+import cz.novros.cp.common.CommonConstants;
+import cz.novros.cp.common.InfoBuilder;
+import cz.novros.cp.common.InfoMapBuilder;
 
 @Entity
 @Data
@@ -24,25 +31,42 @@ public class State {
 
 	String text;
 
-	int postcode;
+	Integer postcode;
 
 	String postOffice;
 
-	double latitude;
+	Double latitude;
 
-	double longitude;
+	Double longitude;
 
 	Date timeDeliveryAttempt;
 
-	public String displayPostOffice() {
-		return postOffice + " " + postcode;
+	@Nonnull
+	public Map<String, String> getDisplayInfo() {
+		return InfoMapBuilder.getBuilder()
+				.add("Post office", displayPostOffice())
+				.add("GPS", displayGps())
+				.build();
 	}
 
-	public String displayGps() {
-		return latitude + " " + longitude;
+	@Nullable
+	private String displayPostOffice() {
+		return InfoBuilder.getBuilder()
+				.add("Name", postOffice)
+				.add("Number", postcode)
+				.build();
 	}
 
+	@Nullable
+	private String displayGps() {
+		return InfoBuilder.getBuilder()
+				.add("Latitude", latitude)
+				.add("Longitude", longitude)
+				.build();
+	}
+
+	@Nonnull
 	public String displayTitle() {
-		return text + " " + date.toString();
+		return CommonConstants.DATE_FORMAT.format(date) + " " + text;
 	}
 }

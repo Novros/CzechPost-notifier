@@ -23,7 +23,7 @@ public class Attributes {
 	String currency;
 
 	@JsonProperty("telefonTyp")
-	int phoneType;
+	Integer phoneType;
 
 	@JsonProperty("telefonNazev")
 	String phoneName;
@@ -35,13 +35,13 @@ public class Attributes {
 	BigDecimal cashOnDelivery;
 
 	@JsonProperty("kusu")
-	int picies;
+	Integer picies;
 
 	@JsonProperty("ulozeniDo")
 	Date storedTo;
 
 	@JsonProperty("ulozeniDoba")
-	int storedDays;
+	Integer storedDays;
 
 	@JsonProperty("zemePuvodu")
 	String originCountry;

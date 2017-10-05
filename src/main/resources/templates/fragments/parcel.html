@@ -3,19 +3,38 @@
 </head>
 <body>
 <div th:fragment="parcel">
-    <div class="panel panel-primary">
-        <div class="panel-heading" th:text="${parcel.parcelTrackingNumber}">Parcel tracking
+    <div class="panel panel-info">
+        <div class="panel-heading" data-toggle="collapse"
+             th:attr="data-target='#detail-view-' + ${parcel.parcelTrackingNumber} + ',#quick-view-' + ${parcel.parcelTrackingNumber} + ',#caret-' + ${parcel.parcelTrackingNumber}"
+        >
+            <span th:id="'caret-' + ${parcel.parcelTrackingNumber}" class="collapse caret"></span>
+            <span th:text="${parcel.parcelTrackingNumber}">Parcel tracking number</span>
+            <div class="pull-right">
+                <a class="btn btn-danger btn-sm"
+                   th:href="@{/remove-tracking(trackingNumbers=${parcel.parcelTrackingNumber})}">Remove
+                </a>
+            </div>
         </div>
-        <ul class="list-group">
-            <li class="list-group-item"><b>Info </b><span th:text="${parcel.attributes.displayBasicInfo()}"></span></li>
-            <li class="list-group-item"><b>Country </b><span th:text="${parcel.attributes.displayCountry()}"></span></li>
-            <li class="list-group-item"><b>Phone </b><span th:text="${parcel.attributes.displayPhone()}"></span></li>
-            <li class="list-group-item"><b>Delivery </b><span th:text="${parcel.attributes.displayDelivery()}"></span>
-            </li>
-            <li class="list-group-item"><b>Stored </b><span th:text="${parcel.attributes.displayStored()}"></span></li>
-        </ul>
         <div class="panel-body">
-            <div th:each="state : ${parcel.getStatesInReverse()}" th:include="fragments/state :: state-div"/>
+            <div class="collapse in"
+                 th:if="${parcel.getLastState() == null}"
+                 th:id="'quick-view-' + ${parcel.parcelTrackingNumber}">
+                <div class="font-italic">No information available.</div>
+            </div>
+            <div class="collapse in"
+                 th:unless="${parcel.getLastState() == null}"
+                 th:id="'quick-view-' + ${parcel.parcelTrackingNumber}">
+                <span th:text="${parcel.getLastState().displayTitle()}">text</span>
+            </div>
+            <div th:id="'detail-view-' + ${parcel.parcelTrackingNumber}" id="detail-view" class="collapse">
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="info : ${parcel.attributes.getDisplayInfo()}">
+                        <strong th:text="${info.key}">key</strong>
+                        <span th:text="${info.value}">num</span>
+                    </li>
+                </ul>
+                <div th:each="state : ${parcel.getStatesInReverse()}" th:include="fragments/state :: state-div"/>
+            </div>
         </div>
     </div>
 </div>

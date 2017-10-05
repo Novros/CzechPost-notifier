@@ -3,17 +3,16 @@
 </head>
 <body>
 <div th:fragment="state-div">
-    <div th:if="${state != null}" class="panel panel-info">
-        <div class="panel-heading" th:text="${state.displayTitle()}">State date + state text</div>
-        <div class="panel-body">
-            <ul class="list-group">
-                <li class="list-group-item"><b>Place: </b><span
-                        th:text="${state.displayPostOffice()}">Post office</span>
-                </li>
-                <li class="list-group-item"><b>Gps: </b><span
-                        th:text="${state.displayGps()}">latitude and longitude</span>
-                </li>
-                <li class="list-group-item"><b>Delivery attempt: </b><span th:text="${state.timeDeliveryAttempt}">delivery attemp</span>
+    <div th:if="${state != null}" class="panel panel-warning state-panel">
+        <div class="panel-heading" data-toggle="collapse"
+             th:attr="data-target='#detail-' + ${state.id}">
+            <span th:text="${state.displayTitle()}"></span>
+        </div>
+        <div th:if="${!state.getDisplayInfo().isEmpty()}" th:id="'detail-' + ${state.id}" class="panel-body state-body collapse">
+            <ul class="list-group state-info">
+                <li class="list-group-item" th:each="info : ${state.getDisplayInfo()}">
+                    <strong th:text="${info.key}">key</strong>
+                    <span th:text="${info.value}">num</span>
                 </li>
             </ul>
         </div>
