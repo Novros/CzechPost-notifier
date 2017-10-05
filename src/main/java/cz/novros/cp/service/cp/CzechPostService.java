@@ -1,6 +1,5 @@
 package cz.novros.cp.service.cp;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.annotation.Nullable;
@@ -32,11 +31,11 @@ public class CzechPostService {
 	 *
 	 * @return Collection of read parcels, it might not have some parcels, because they not exists.
 	 */
-	public Collection<Parcel> readParcels(@Nullable final String[] trackingNumbers) {
-		if (trackingNumbers == null || trackingNumbers.length == 0) {
+	public Collection<Parcel> readParcels(@Nullable final Collection<String> trackingNumbers) {
+		if (trackingNumbers == null || trackingNumbers.isEmpty()) {
 			return ImmutableList.of();
 		} else {
-			return EntityConverter.convertParcels(restClient.readParcels(Arrays.asList(trackingNumbers)));
+			return EntityConverter.convertParcels(restClient.readParcels(trackingNumbers));
 		}
 	}
 }

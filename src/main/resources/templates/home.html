@@ -10,6 +10,9 @@
 
     <div class="starter-template">
         <div th:include="fragments/add_tracking :: add-tracking"/>
+        <div class="pnl">
+            <a class="btn btn-default" th:href="@{/refresh-parcels}">Refresh</a>
+        </div>
         <div th:each="parcel : ${parcels}" th:include="fragments/parcel :: parcel"/>
     </div>
 

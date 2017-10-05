@@ -1,6 +1,5 @@
 package cz.novros.cp.service.parcel;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
@@ -33,8 +32,8 @@ public class ParcelService {
 	 * @return Parcels with given tracking numbers.
 	 */
 	@Nonnull
-	public Collection<Parcel> readParcels(@Nonnull final String[] trackingNumbers) {
-		final Collection<Parcel> databaseParcels = parcelRepository.findByParcelTrackingNumberIn(Arrays.asList(trackingNumbers));
+	public Collection<Parcel> readParcels(@Nonnull final Collection<String> trackingNumbers) {
+		final Collection<Parcel> databaseParcels = parcelRepository.findByParcelTrackingNumberIn(trackingNumbers);
 		return databaseParcels == null ? ImmutableList.of() : databaseParcels;
 	}
 
@@ -55,7 +54,7 @@ public class ParcelService {
 	 *
 	 * @param trackingNumbers Parcels which will be deleted.
 	 */
-	public void removeParcels(@Nonnull final String[] trackingNumbers) {
+	public void removeParcels(@Nonnull final Collection<String> trackingNumbers) {
 		for (final String tracking : trackingNumbers) {
 			parcelRepository.delete(tracking);
 		}

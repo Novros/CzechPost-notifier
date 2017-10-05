@@ -1,5 +1,6 @@
 package cz.novros.cp.web.view;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
@@ -38,67 +39,51 @@ public class DefaultController {
 
 	@GetMapping(value = {"/", "/home"})
 	public String home(final Model model) {
-		model.addAttribute("formTrackingNumbers", new TrackingNumbersForm());
-		model.addAttribute("parcels", getParcelsOfCurrentUser());
-		return "home";
-	}
-
-	@GetMapping("/tracking-numbers")
-	public String trackingNumbers(@Nonnull final Model model) {
-		return displayTrackingNumbers(model, null);
+		return displayParcels(model, null);
 	}
 
 	@PostMapping("/add-tracking")
 	public String addTrackingNumbers(@ModelAttribute @Nullable final TrackingNumbersForm trackingNumbers, @Nonnull final Model model) {
-		if (trackingNumbers != null && trackingNumbers.getTrackingNumbersArray().length != 0) {
-			applicationService.refreshParcels(trackingNumbers.getTrackingNumbersArray());
-			return displayTrackingNumbers(model, userService.addTrackingNumbers(getLoggedUsername(), trackingNumbers.getTrackingNumbersArray()));
+		if (trackingNumbers != null && !trackingNumbers.getTrackingNumbersCollection().isEmpty()) {
+			applicationService.refreshParcels(trackingNumbers.getTrackingNumbersCollection());
+			return displayParcelByTrackingNumbers(model, userService.addTrackingNumbers(getLoggedUsername(), trackingNumbers.getTrackingNumbersCollection()));
 		} else {
-			return trackingNumbers(model);
+			return home(model);
 		}
 	}
 
 	@GetMapping("/remove-tracking") // FIXME - Maybe POST?
 	public String removeTrackingNumbers(@RequestParam @Nullable final String trackingNumbers, @Nonnull final Model model) {
 		if (trackingNumbers != null && !trackingNumbers.isEmpty()) {
-			final String[] numbers = trackingNumbers.split(CommonConstants.TRACKING_NUMBER_DELIMITER);
+			final Collection<String> numbers = Arrays.asList(trackingNumbers.split(CommonConstants.TRACKING_NUMBER_DELIMITER));
 			parcelService.removeParcels(numbers);
-			return displayTrackingNumbers(model, userService.removeTrackingNumbers(getLoggedUsername(), numbers));
+			return displayParcelByTrackingNumbers(model, userService.removeTrackingNumbers(getLoggedUsername(), numbers));
 		} else {
-			return trackingNumbers(model);
+			return home(model);
 		}
-	}
-
-	@GetMapping("/tracked-parcels")
-	public String tracking(@Nonnull final Model model) {
-		return displayTrackedParcels(model, null);
 	}
 
 	@GetMapping("/refresh-parcels")
 	public String refresh(@Nonnull final Model model) {
-		return displayTrackedParcels(model, applicationService.refreshParcels(getTrackingNumbersOfCurrentUser()));
+		return displayParcels(model, applicationService.refreshParcels(getTrackingNumbersOfCurrentUser()));
 	}
 
-	private String displayTrackedParcels(@Nonnull final Model model, @Nullable final Collection<Parcel> parcels) {
-		model.addAttribute("parcels", parcels == null ? getParcelsOfCurrentUser() :
-				parcels);
-		return "tracked_parcels";
+	private String displayParcelByTrackingNumbers(@Nonnull final Model model, @Nullable final Collection<String> parcels) {
+		return displayParcels(model, getParcels(parcels));
 	}
 
-	private String displayTrackingNumbers(@Nonnull final Model model, @Nullable final Collection<String> trackingNumbers) {
-		model.addAttribute("trackingNumbers", trackingNumbers == null ? getTrackingNumbersOfCurrentUser() :
-				trackingNumbers);
+	private String displayParcels(@Nonnull final Model model, @Nullable final Collection<Parcel> parcels) {
 		model.addAttribute("formTrackingNumbers", new TrackingNumbersForm());
-		return "tracking_numbers";
+		model.addAttribute("parcels", parcels == null ? getParcels(getTrackingNumbersOfCurrentUser()) : parcels);
+		return "home";
 	}
 
-	private String[] getTrackingNumbersOfCurrentUser() {
-		final Collection<String> numbers = userService.readTrackingNumbers(getLoggedUsername());
-		return numbers.toArray(new String[numbers.size()]);
+	private Collection<String> getTrackingNumbersOfCurrentUser() {
+		return userService.readTrackingNumbers(getLoggedUsername());
 	}
 
-	private Collection<Parcel> getParcelsOfCurrentUser() {
-		return parcelService.readParcels(getTrackingNumbersOfCurrentUser());
+	private Collection<Parcel> getParcels(@Nullable final Collection<String> trackingNumbers) {
+		return trackingNumbers == null ? null : parcelService.readParcels(trackingNumbers);
 	}
 
 	private String getLoggedUsername() {
