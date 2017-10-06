@@ -9,12 +9,15 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+import cz.novros.cp.common.CommonConstants;
 import cz.novros.cp.rest.entity.Parcel;
 
 @Component
@@ -22,8 +25,11 @@ import cz.novros.cp.rest.entity.Parcel;
 public class CzechPostRestClient {
 
 	private static final int MAXIMAL_COUNT_OF_PARCELS = 10;
-	private static final String PARCEL_HISTORY_PATH = "https://b2c.cpost.cz/services/ParcelHistory/getDataAsJson?idParcel=";
-	private static final String JOINER = ";";
+
+	private static final String PARCEL_HISTORY_URL = "https://b2c.cpost.cz/services/ParcelHistory/getDataAsJson";
+	private static final String PARCEL_PARAM = "idParcel";
+	private static final String LANGUAGE_PARAM = "language";
+	private static final String ENGLISH_LANGUAGE = "en";
 
 	RestTemplate restTemplate;
 
@@ -44,9 +50,10 @@ public class CzechPostRestClient {
 
 	@Nonnull
 	private Parcel[] readParcelsForMaxN(@Nonnull final Collection<String> parcelIds) {
-		return restTemplate.getForObject(
-				PARCEL_HISTORY_PATH + parcelIds.stream().collect(Collectors.joining(JOINER))
-				, Parcel[].class);
+		final UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(PARCEL_HISTORY_URL)
+				.queryParam(LANGUAGE_PARAM, ENGLISH_LANGUAGE)
+				.queryParam(PARCEL_PARAM, parcelIds.stream().collect(Collectors.joining(CommonConstants.TRACKING_NUMBER_DELIMITER)));
+		return restTemplate.exchange(builder.build().toUri(), HttpMethod.GET, null, Parcel[].class).getBody();
 	}
 
 	@Nonnull
