@@ -8,12 +8,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.Embeddable;
 
-import com.google.common.collect.ImmutableMap;
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import cz.novros.cp.common.BigDecimalComparator;
 import cz.novros.cp.common.InfoBuilder;
 import cz.novros.cp.common.InfoMapBuilder;
 
@@ -67,9 +66,9 @@ public class Attributes {
 	private String displayBasicInfo() {
 		return InfoBuilder.getBuilder()
 				.add("Quantity", quantity)
-				.add("Weight", weight, "kg")
+				.add("Weight", BigDecimalComparator.isZero(weight) ? null : weight, "kg")
 				.add("Parcel type", parcelType)
-				.add("Cash on delivery", cashOnDelivery)
+				.add("Cash on delivery", BigDecimalComparator.isZero(cashOnDelivery) ? null : cashOnDelivery, currency)
 				.build();
 	}
 
