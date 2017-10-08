@@ -29,6 +29,8 @@ import cz.novros.cp.service.user.UserSecurityService;
 @EnableScheduling
 public class Application {
 
+	public static final String APPLICATION_NAME = "Czech post notifier";
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}

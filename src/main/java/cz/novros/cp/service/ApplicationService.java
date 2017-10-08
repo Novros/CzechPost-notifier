@@ -1,9 +1,12 @@
 package cz.novros.cp.service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+
+import com.google.common.collect.Collections2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,7 +19,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import cz.novros.cp.entity.Parcel;
+import cz.novros.cp.entity.User;
 import cz.novros.cp.service.cp.CzechPostService;
+import cz.novros.cp.service.notification.MailService;
 import cz.novros.cp.service.parcel.ParcelService;
 import cz.novros.cp.service.user.UserService;
 
@@ -29,6 +34,7 @@ public class ApplicationService {
 	CzechPostService czechPostService;
 	ParcelService parcelService;
 	UserService userService;
+	MailService mailService;
 
 	/**
 	 * Refresh parcels by tracking numbers.
@@ -58,12 +64,49 @@ public class ApplicationService {
 
 		log.info("Refreshing all parcels with tracking numbers({}).", allTrackingNumbers.size());
 
-		Collection<Parcel> parcels = czechPostService.readParcels(allTrackingNumbers);
+		Collection<Parcel> updatedParcels = czechPostService.readParcels(allTrackingNumbers);
 
-		log.info("Refreshed parcels({}) from czech post rest api.", parcels.size());
+		log.info("Refreshed parcels({}) from czech post rest api.", updatedParcels.size());
 
-		parcels = parcelService.saveParcels(parcels);
+		updatedParcels = parcelService.saveParcels(updatedParcels);
 
-		log.info("Saved refresh parcels({}) to database.", parcels.size());
+		Collection<Parcel> oldParcels = parcelService.readParcels(allTrackingNumbers);
+		checkParcels(oldParcels, updatedParcels);
+
+		log.info("Saved refresh parcels({}) to database.", updatedParcels.size());
+	}
+
+	private void checkParcels(@Nonnull final Collection<Parcel> oldParcels, @Nonnull final Collection<Parcel> newParcels) {
+		for (final User user : userService.readAllUsers()) {
+			sendChangedParcelsMail(user, oldParcels, Collections2.filter(newParcels, input -> user.getTrackingNumbers().contains(input.getParcelTrackingNumber())));
+		}
+	}
+
+	private void sendChangedParcelsMail(@Nonnull final User user, @Nonnull final Collection<Parcel> oldParcels, @Nonnull final Collection<Parcel> newParcels) {
+		final Collection<Parcel> changedParcels = new HashSet<>();
+
+		for (final Parcel newParcel : newParcels) {
+			for (final Parcel oldParcel : oldParcels) {
+				if (newParcel.getParcelTrackingNumber().equals(oldParcel.getParcelTrackingNumber()) && isParcelChanged(oldParcel, newParcel)) {
+					changedParcels.add(newParcel);
+				}
+			}
+		}
+
+		if (!changedParcels.isEmpty()) {
+			mailService.sendParcelsChange(user, changedParcels);
+		}
+	}
+
+	private boolean isParcelChanged(@Nonnull final Parcel a, @Nonnull final Parcel b) {
+		if (a.getLastState() == null && b.getLastState() == null) {
+			return false;
+		} else if (a.getLastState() == null) {
+			return true;
+		} else if (b.getLastState() == null) {
+			return true;
+		} else {
+			return !a.getLastState().getText().equals(b.getLastState().getText());
+		}
 	}
 }

@@ -107,4 +107,10 @@ public class UserService {
 
 		return trackingNumbers;
 	}
+
+	@Nonnull
+	public Iterable<User> readAllUsers() {
+		final Iterable<User> users = userRepository.findAll();
+		return users == null ? ImmutableSet.of() : users;
+	}
 }
