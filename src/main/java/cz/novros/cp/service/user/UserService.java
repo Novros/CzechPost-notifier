@@ -1,6 +1,7 @@
 package cz.novros.cp.service.user;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -84,5 +85,26 @@ public class UserService {
 		}
 
 		return user.getTrackingNumbers();
+	}
+
+	/**
+	 * Read all tracking numbers of all users from repository.
+	 *
+	 * @return Collection of all tracking numbers of all users.
+	 */
+	@Nonnull
+	public Set<String> readAllTrackingNumbers() {
+		final Iterable<User> users = userRepository.findAll();
+
+		if (users == null) {
+			return ImmutableSet.of();
+		}
+
+		final Set<String> trackingNumbers = new HashSet<>();
+		for (final User user : users) {
+			trackingNumbers.addAll(user.getTrackingNumbers());
+		}
+
+		return trackingNumbers;
 	}
 }
