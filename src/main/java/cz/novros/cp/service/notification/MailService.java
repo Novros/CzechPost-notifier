@@ -1,10 +1,12 @@
 package cz.novros.cp.service.notification;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ import cz.novros.cp.entity.User;
 @Slf4j
 public class MailService {
 
+	//@Value("${mail.sender.name}")
+	private static String SENDER = "info@czech-post-notifier"; // FIXME
+
 	JavaMailSender mailSender;
 
 	public void sendParcelsChange(@Nonnull final User user, @Nonnull final Collection<Parcel> parcels) {
@@ -33,6 +38,8 @@ public class MailService {
 		mailMessage.setTo(user.getEmail());
 		mailMessage.setSubject(getSubject(parcels));
 		mailMessage.setText(getMessageBody(parcels));
+		mailMessage.setFrom(SENDER);
+		mailMessage.setSentDate(new Date());
 
 		log.debug("Sending mail: {}", mailMessage);
 
