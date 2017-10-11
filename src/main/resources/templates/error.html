@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error page</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="css/main.css" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<h1>Oops, an error occurred!</h1>
+<!-- TODO Implement detail error message. -->
+<!--<h1>Oops, an error occurred! <span th:text="${status} - ${status.getReasonPhrase()}">404</span></h1>-->
+<!--<p th:utext="${errorMessage}">Error</p>-->
+You can return on home page: <a href="index.html" th:href="@{/home.html}">Back to Home Page</a>
+</body>
+</html>

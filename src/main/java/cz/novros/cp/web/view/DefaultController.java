@@ -12,9 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AccessLevel;
@@ -37,12 +37,12 @@ public class DefaultController {
 	ParcelService parcelService;
 	ApplicationService applicationService;
 
-	@GetMapping(value = {"/", "/home"})
+	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
 	public String home(final Model model) {
 		return displayParcels(model, null);
 	}
 
-	@PostMapping("/add-tracking")
+	@RequestMapping(value = "/add-tracking", method = RequestMethod.POST)
 	public String addTrackingNumbers(@ModelAttribute @Nullable final TrackingNumbersForm trackingNumbers, @Nonnull final Model model) {
 		if (trackingNumbers != null && !trackingNumbers.getTrackingNumbersCollection().isEmpty()) {
 			applicationService.refreshParcels(trackingNumbers.getTrackingNumbersCollection());
@@ -52,7 +52,7 @@ public class DefaultController {
 		}
 	}
 
-	@GetMapping("/remove-tracking") // FIXME - Maybe POST?
+	@RequestMapping(value = "/remove-tracking", method = RequestMethod.GET) // FIXME - Maybe POST?
 	public String removeTrackingNumbers(@RequestParam @Nullable final String trackingNumbers, @Nonnull final Model model) {
 		if (trackingNumbers != null && !trackingNumbers.isEmpty()) {
 			final Collection<String> numbers = Arrays.asList(trackingNumbers.split(CommonConstants.TRACKING_NUMBER_DELIMITER));
@@ -63,7 +63,7 @@ public class DefaultController {
 		}
 	}
 
-	@GetMapping("/refresh-parcels")
+	@RequestMapping(value = "/refresh-parcels", method = RequestMethod.GET)
 	public String refresh(@Nonnull final Model model) {
 		return displayParcels(model, applicationService.refreshParcels(getTrackingNumbersOfCurrentUser()));
 	}

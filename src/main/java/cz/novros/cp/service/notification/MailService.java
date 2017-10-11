@@ -26,14 +26,12 @@ import cz.novros.cp.entity.User;
 @Slf4j
 public class MailService {
 
-	//@Value("${mail.sender.name}")
-	private static String SENDER = "info@czech-post-notifier"; // FIXME
+	@Value("${mail.sender.name}")
+	private static String SENDER = "info@czech-post-notifier";
 
 	JavaMailSender mailSender;
 
 	public void sendParcelsChange(@Nonnull final User user, @Nonnull final Collection<Parcel> parcels) {
-		log.info("Sending information mail about parcels changed ({}) to user({}).", parcels.size(), user.getEmail());
-
 		final SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(user.getEmail());
 		mailMessage.setSubject(getSubject(parcels));
