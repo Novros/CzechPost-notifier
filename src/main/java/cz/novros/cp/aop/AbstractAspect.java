@@ -13,10 +13,10 @@ public class AbstractAspect {
 		final StringBuilder builder = new StringBuilder();
 
 		if (mapping != null) {
-			if (mapping.method() != null) {
+			if (mapping.method() != null && mapping.method().length != 0) {
 				builder.append(mapping.method()[0]);
 			}
-			if (mapping.value() != null) {
+			if (mapping.value() != null && mapping.value().length != 0) {
 				if (!builder.toString().isEmpty()) {
 					builder.append(" ");
 				}

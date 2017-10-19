@@ -20,17 +20,21 @@ public class ExceptionHandlerAspect extends AbstractAspect {
 
 	@Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && target(controller)")
 	public ModelAndView handleException(final ProceedingJoinPoint jp, final Object controller) throws Throwable {
-		final ModelAndView view;
+		Object view;
 
 		try {
-			view = (ModelAndView) jp.proceed();
+			view = jp.proceed();
 		} catch (final Exception exception) {
 			log.error("Error occurred in {}.", jp.getSignature().toShortString(), exception);
 
 			return new ModelAndView("error", getModelMap(exception), getStatusCode(exception));
 		}
+		
+		if (view instanceof String) {
+			view = new ModelAndView((String) view);
+		}
 
-		return view;
+		return (ModelAndView) view;
 	}
 
 	private Map<String, Object> getModelMap(final Exception exception) {
