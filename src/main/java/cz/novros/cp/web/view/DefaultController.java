@@ -60,13 +60,16 @@ public class DefaultController {
 		
 		if (user.getPassword().equals(user.getCheckPassword())) {
 			result = securityService.registerUser(new cz.novros.cp.entity.User(user.getUsername(), user.getPassword(), new HashSet<>()));
+			if (!result) {
+				error = "Could not create user with email " + user.getUsername() + ".";
+			}
 		} else {
 			result = false;
 			error = "Password and confirm password is not same.";
 		}
 		
 		if (result) {
-			return home();
+			return new ModelAndView("redirect:login?signup=" + user.getUsername());
 		} else {
 			final ModelAndView modelAndView = new ModelAndView("register");
 			if (error != null) {

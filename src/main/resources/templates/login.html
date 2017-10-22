@@ -19,6 +19,9 @@
     <div class="alert alert-info text-center" role="alert" th:if="${param.logout}">
         You have been successfully logged out.
     </div>
+    <div class="alert alert-info text-center" role="alert" th:if="${param.signup}" th:text="${#request.getParameter('signup')}">
+        User where successfully sign up.
+    </div>
     
     <form class="form-signin" th:action="@{/login}" method="post">
         <h2 class="form-signin-heading">Please sign in</h2>
