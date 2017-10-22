@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterUser {
-	String email;
+	String username;
 	String password;
 	String checkPassword;
 }

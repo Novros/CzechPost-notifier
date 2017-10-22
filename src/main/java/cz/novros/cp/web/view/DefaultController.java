@@ -45,6 +45,13 @@ public class DefaultController {
 	public ModelAndView home() {
 		return displayHome(null);
 	}
+
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView register() {
+		final ModelAndView modelAndView = new ModelAndView("register");
+		modelAndView.addObject("registerUser", new RegisterUser());
+		return modelAndView;
+	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ModelAndView registerUser(@ModelAttribute @Nonnull final RegisterUser user) {
@@ -52,19 +59,18 @@ public class DefaultController {
 		boolean result;
 		
 		if (user.getPassword().equals(user.getCheckPassword())) {
-			result = securityService.registerUser(new cz.novros.cp.entity.User(user.getEmail(), user.getPassword(), new HashSet<>()));
+			result = securityService.registerUser(new cz.novros.cp.entity.User(user.getUsername(), user.getPassword(), new HashSet<>()));
 		} else {
 			result = false;
 			error = "Password and confirm password is not same.";
 		}
 		
-		
 		if (result) {
 			return home();
 		} else {
-			final ModelAndView modelAndView = new ModelAndView("redirect:/login");
+			final ModelAndView modelAndView = new ModelAndView("register");
 			if (error != null) {
-				modelAndView.addObject("sign-error", error);
+				modelAndView.addObject("error", error);
 			}
 			return modelAndView;
 		}

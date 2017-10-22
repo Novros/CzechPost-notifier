@@ -16,12 +16,8 @@
 <body>
 <div class="container">
 
-    <div class="alert alert-info text-center" role="alert" th:if="${param.logout}">
-        You have been successfully logged out.
-    </div>
-    
-    <form class="form-signin" th:action="@{/login}" method="post">
-        <h2 class="form-signin-heading">Please sign in</h2>
+    <form class="form-signin" th:action="@{/register}" method="post">
+        <h2 class="form-signin-heading">Please fill information</h2>
         <label for="username" class="sr-only">Email address</label>
         <input type="email" id="username" name="username" class="form-control" placeholder="Email address"
                required="required"
@@ -29,11 +25,12 @@
         <label for="password" class="sr-only">Password</label>
         <input type="password" id="password" name="password" class="form-control" placeholder="Password"
                required="required"/>
-        <div class="alert alert-danger text-center" role="alert" th:if="${param.error}">
-            Invalid username or password!
+        <label for="checkPassword" class="sr-only">Confirm password</label>
+        <input type="password" id="checkPassword" name="checkPassword" class="form-control" placeholder="Confirm password"
+               required="required"/>
+        <div class="alert alert-danger text-center" role="alert" th:if="${error != null}" th:text="${error}">
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        Or <a th:href="@{/register}">sign up</a>.
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     </form>
 
 </div>
