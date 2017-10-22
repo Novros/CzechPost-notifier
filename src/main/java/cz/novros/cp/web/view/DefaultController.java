@@ -2,7 +2,9 @@ package cz.novros.cp.web.view;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,9 @@ import cz.novros.cp.common.CommonConstants;
 import cz.novros.cp.entity.Parcel;
 import cz.novros.cp.service.ApplicationService;
 import cz.novros.cp.service.parcel.ParcelService;
+import cz.novros.cp.service.user.UserSecurityService;
 import cz.novros.cp.service.user.UserService;
+import cz.novros.cp.web.view.entity.RegisterUser;
 import cz.novros.cp.web.view.entity.TrackingNumbersForm;
 
 @Controller
@@ -32,6 +36,7 @@ import cz.novros.cp.web.view.entity.TrackingNumbersForm;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class DefaultController {
 
+	UserSecurityService securityService;
 	UserService userService;
 	ParcelService parcelService;
 	ApplicationService applicationService;
@@ -39,6 +44,39 @@ public class DefaultController {
 	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
 	public ModelAndView home() {
 		return displayHome(null);
+	}
+
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView register() {
+		final ModelAndView modelAndView = new ModelAndView("register");
+		modelAndView.addObject("registerUser", new RegisterUser());
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ModelAndView registerUser(@ModelAttribute @Nonnull final RegisterUser user) {
+		String error = null;
+		boolean result;
+		
+		if (user.getPassword().equals(user.getCheckPassword())) {
+			result = securityService.registerUser(new cz.novros.cp.entity.User(user.getUsername(), user.getPassword(), new HashSet<>()));
+			if (!result) {
+				error = "Could not create user with email " + user.getUsername() + ".";
+			}
+		} else {
+			result = false;
+			error = "Password and confirm password is not same.";
+		}
+		
+		if (result) {
+			return new ModelAndView("redirect:login?signup=" + user.getUsername());
+		} else {
+			final ModelAndView modelAndView = new ModelAndView("register");
+			if (error != null) {
+				modelAndView.addObject("error", error);
+			}
+			return modelAndView;
+		}
 	}
 
 	@RequestMapping(value = "/add-tracking", method = RequestMethod.POST)
