@@ -4,10 +4,9 @@
 <body>
 <div th:fragment="parcel">
     <div class="panel panel-info">
-        <div class="panel-heading col-xs-12 col-lg-12" data-toggle="collapse"
-             th:attr="data-target='#detail-view-' + ${parcel.parcelTrackingNumber} + ',#quick-view-' + ${parcel.parcelTrackingNumber} + ',#caret-' + ${parcel.parcelTrackingNumber}"
-        >
-            <div class="panel-title col-xs-10 col-lg-11">
+        <div class="panel-heading col-xs-12 col-lg-12">
+            <div class="panel-title col-xs-10 col-lg-11" data-toggle="collapse"
+                 th:attr="data-target='#detail-view-' + ${parcel.parcelTrackingNumber} + ',#quick-view-' + ${parcel.parcelTrackingNumber} + ',#caret-' + ${parcel.parcelTrackingNumber}">
                 <span th:id="'caret-' + ${parcel.parcelTrackingNumber}" class="collapse caret"></span>
                 <span th:text="${parcel.parcelTrackingNumber}">Parcel tracking number</span>
             </div>
