@@ -1,6 +1,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
 >
 <head>
+    <div th:fragment="header-meta">
+        <meta charset="utf-8"/>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+    </div>
+
     <div th:fragment="header-css">
         <!-- this is header-css -->
         <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
@@ -10,19 +16,19 @@
 <body>
 <div th:fragment="header">
     <!-- this is header -->
-    <nav class="navbar navbar-inverse justify-content-between ">
+    <nav class="navbar navbar-inverse justify-content-between">
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" th:href="@{/}">Czech Post - Parcels</a>
             </div>
-            <div id="navbar" class="collapse navbar-collapse">
+            <div id="navbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a class="glyphicon glyphicon-user navbar-link disabled" th:inline="text">
                         [[${#httpServletRequest.remoteUser}]]</a>
                     </li>
                     <li>
                         <form class="form-inline" th:action="@{/logout}" method="post">
-                            <button class="btn btn-default" type="submit">Sign out</button>
+                            <button class="btn btn-default logout" type="submit">Sign out</button>
                         </form>
                     </li>
                 </ul>

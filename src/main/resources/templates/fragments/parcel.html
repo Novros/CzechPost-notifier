@@ -4,18 +4,18 @@
 <body>
 <div th:fragment="parcel">
     <div class="panel panel-info">
-        <div class="panel-heading" data-toggle="collapse"
+        <div class="panel-heading col-xs-12 col-lg-12" data-toggle="collapse"
              th:attr="data-target='#detail-view-' + ${parcel.parcelTrackingNumber} + ',#quick-view-' + ${parcel.parcelTrackingNumber} + ',#caret-' + ${parcel.parcelTrackingNumber}"
         >
-            <span th:id="'caret-' + ${parcel.parcelTrackingNumber}" class="collapse caret"></span>
-            <span th:text="${parcel.parcelTrackingNumber}">Parcel tracking number</span>
-            <div class="pull-right">
-                <a class="btn btn-danger btn-sm"
-                   th:href="@{/remove-tracking(trackingNumbers=${parcel.parcelTrackingNumber})}">Remove
-                </a>
+            <div class="panel-title col-xs-10 col-lg-11">
+                <span th:id="'caret-' + ${parcel.parcelTrackingNumber}" class="collapse caret"></span>
+                <span th:text="${parcel.parcelTrackingNumber}">Parcel tracking number</span>
             </div>
+            <a class="btn btn-danger btn-sm col-xs-2 col-lg-1"
+               th:href="@{/remove-tracking(trackingNumbers=${parcel.parcelTrackingNumber})}">Remove
+            </a>
         </div>
-        <div class="panel-body">
+        <div class="panel-body col-lg-12 col-xs-12">
             <div class="collapse in"
                  th:if="${parcel.getLastState() == null}"
                  th:id="'quick-view-' + ${parcel.parcelTrackingNumber}">
