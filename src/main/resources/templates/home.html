@@ -1,21 +1,15 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <div th:replace="fragments/header :: header-meta"/>
     <title>CP - Parcels</title>
     <div th:replace="fragments/header :: header-css"/>
 </head>
 <body>
 <div th:replace="fragments/header :: header"/>
 <div class="container">
-
-    <div class="starter-template">
-        <div th:include="fragments/add_tracking :: add-tracking"/>
-        <div class="pnl">
-            <a class="btn btn-default" th:href="@{/refresh-parcels}">Refresh</a>
-        </div>
-        <div th:each="parcel : ${parcels}" th:include="fragments/parcel :: parcel"/>
-    </div>
-
+    <div th:include="fragments/add_tracking :: add-tracking"/>
+    <div th:each="parcel : ${parcels}" th:include="fragments/parcel :: parcel" class="col-xs-12 col-lg-12"/>
 </div>
 <div th:replace="fragments/footer :: footer"/>
 </body>

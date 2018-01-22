@@ -5,12 +5,13 @@
 <div th:fragment="add-tracking">
     <div class="panel panel-default">
         <div class="panel-body">
-            <form class="form-inline" method="post" th:action="@{/add-tracking}" th:object="${formTrackingNumbers}">
-                <div class="form-group" style="width: 85%">
-                    <label for="numbers" style="width: 39%">Tracking numbers (';' use as delimiter)</label>
-                    <input type="text" class="form-control" th:field="*{trackingNumbers}" id="numbers" style="width: 60%"/>
+            <a class="btn btn-default col-xs-2 col-lg-1" th:href="@{/refresh-parcels}">Refresh</a>
+            <form class="form-inline col-xs-10" method="post" th:action="@{/add-tracking}" th:object="${formTrackingNumbers}">
+                <div class="form-group col-xs-10">
+                    <label for="numbers" class="col-xs-4">Tracking numbers (';' use as delimiter)</label>
+                    <input type="text" class="form-control col-xs-8" style="width: 66.666%;" th:field="*{trackingNumbers}" id="numbers"/>
                 </div>
-                <button type="submit" class="btn btn-info" style="width: 14%">Add</button>
+                <button type="submit" class="btn btn-info col-xs-2">Add</button>
             </form>
         </div>
     </div>
